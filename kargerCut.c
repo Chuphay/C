@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 #define ROWCOUNT 200
-#define COLUMNCOUNT 50
+#define COLUMNCOUNT 200
 
 /*
 The file contains the adjacency list representation of a simple undirected 
@@ -126,10 +126,7 @@ int cut(int length, int **data){
     //checking to make sure they're not already used
     while(flag == 0){
       crazy = rand()/(RAND_MAX+1.0);
- 
       rdm = (int)(length*crazy);
-      //printf("crazy : %d\n",rdm);
-
       if(num_of_merge == 0){
 	flag = 1;
       } else {
@@ -153,12 +150,13 @@ int cut(int length, int **data){
     float crazy2 = rand()/(RAND_MAX + 1.0);
     int rdm2 = (int)(num_of_conn*crazy2);
     int node_num = data[rdm][rdm2+2]; 
+    printf("num: %d  rand: %d rand2: %d\n",num_of_merge, rdm,rdm2);
     used[num_of_merge] = node_num;
 
     
     //this code block initializes a new column
     //and inserts the first row into it
-    int *temp_row = malloc(2*ROWCOUNT*sizeof(int));
+    int temp_row[2*ROWCOUNT]// = malloc(2*ROWCOUNT*sizeof(int));
     int i = 0;
     flag = 0;
     for(i = 0; i<num_of_conn; i++){
@@ -173,9 +171,10 @@ int cut(int length, int **data){
     int count = 0;
     for(i = 0; i <data[node_num - 1][0]; i++){
       int number = data[node_num - 1][i+2];
+      //printf("number: %d\n", number);
       if(number == data[rdm][1]){
 	//here we are checking for self-referencing
-      }else {
+      } else {
 	temp_row[num_of_conn + count - flag] = number;
 	count++;
       }
@@ -184,6 +183,7 @@ int cut(int length, int **data){
 
     //this code reinserts the new data into the row
     if(count+num_of_conn+1>COLUMNCOUNT){
+      printf("count: %d num_of_conn: %d\n", count, num_of_conn); 
       printf("error combining the lists\n");
       exit(1);
     } else {
@@ -192,7 +192,7 @@ int cut(int length, int **data){
 	data[rdm][i+2]=temp_row[i];
       }
     }
-    free(temp_row);
+    //free(temp_row);
 
     //this code block changes all used numbers into their new value
     for (l=0; l<length;l++){
@@ -250,10 +250,10 @@ int main(void){
     data[i] = (int *)malloc(COLUMNCOUNT * sizeof(int));
   }
 
-  int length = open(data,"graphTest.txt");    //"kargerMinCut.txt"); 
+  int length = open(data,"kargerMinCut.txt");    //"kargerMinCut.txt"); 
   
 
-  for(i = 0 ; i < 4;i++){
+  for(i = 0 ; i < 10;i++){
     printf("i == %d\n",i);
   int **temp_data = (int **)malloc(ROWCOUNT * sizeof(int*));
   int temp_i;
