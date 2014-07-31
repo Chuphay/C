@@ -9,7 +9,7 @@ typedef struct node{
 } node;
 
 void push(node *first, int value){
-  /*order 1, pushes to the fromt of the list*/
+  /*order 1, pushes to the front of the list*/
   node * next = malloc(sizeof(node));
   next->value = first->value;
   next->next = first->next;
@@ -56,7 +56,7 @@ void input(int n){
 
 int find(int n){
   /*not fully implemented yet*/
-  return basic[n&bigN]->value;
+  return basic[n%bigN]->value;
 }
 
 int main(){
