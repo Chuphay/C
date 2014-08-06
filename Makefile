@@ -7,3 +7,6 @@ all: graph_easy
 
 graph_easy: queue.o
 
+A_star: heap.o
+
+

@@ -1,103 +1,114 @@
-#include <stdio.h>
 #include <stdlib.h>
-#define MAX 8
+#include <stdio.h>
+#include "heap.h"
 
-/*not sure if this actually works
-check schedule program for better stuff
-*/
+#define MAX 30
 
 
-int *create(void){
-  int *out = malloc((MAX+1)*sizeof(int));
-  out[0] = 0;
+void flip(data *a, data *b){
+   int temp1 = a->value;
+   char *temp2 = a->value1;
+   char *temp3 = a->value2;
+   a->value = b->value;
+   a->value1 = b->value1;
+   a->value2 = b->value2;
+   b->value = temp1;
+   b->value1 = temp2;
+   b->value2 = temp3;
+}
+
+data *create_data(int value, char *value1, char *value2){
+  data *out = malloc(sizeof(data));
+  out->value = value;
+  out->value1 = value1;
+  out->value2 = value2;
   return out;
 }
 
-void bubble(int *heap, int value){
-  if(heap[0]>=MAX){
-    printf("the heap is over the max\n");
-    exit(1);
+data **create_heap(void){
+  data **out = malloc((MAX)*sizeof(data *));
+  int i;  
+  for(i=0;i<MAX;i++){
+    // out[i] = malloc(sizeof(data));
   }
-  heap[0]++;
-  int length = heap[0];
-  heap[length] = value;
-  
- 
-    while((heap[length]<heap[length/2]) && (length>1)){
-      int temp = heap[length];
-      heap[length] = heap[length/2];
-      heap[length/2] = temp;
-      // printf("temp: %d %d\n",temp, heap[length]);
-      length = length/2;
-      }
-  
-
-    //printf("length of heap: %d %d %d %d\n",heap[0], length,heap[length],heap[heap[0]]); 
+  out[0] = malloc(sizeof(data));
+  out[0]->value = 0; //this is to take care of the length of the heap
+  return out;
 }
 
-int extract(int * heap){
-  if (heap[0]<1){
+void destroy(data ** heap){
+  int i;
+  for(i=1;i<heap[0]->value+1;i++){
+    free(heap[i]);
+  }
+  free(heap[0]);
+  free(heap);
+}
+
+
+
+void print(data **heap){
+    int j;
+    printf("heap: [");
+    for(j=1;j<heap[0]->value+1;j++){
+      printf("%d,",heap[j]->value);
+    }
+    printf("]\n");
+}
+
+
+
+void bubble(data **heap, data *data){
+   if(heap[0]->value+4>MAX){
+     /*I guess this is just to be safe...
+       but maybe I'm covering up a bug?*/
+     printf("the heap is over the max\n");
+     exit(1);
+   }
+   heap[0]->value++;
+   int length = heap[0]->value;
+   heap[length] = data;
+
+   while((heap[length]->value<heap[length/2]->value) && (length>1)){
+     flip(heap[length],heap[length/2]);
+     length = length/2;
+   }
+}
+
+
+data *extract(data **heap){
+  if (heap[0]->value<1){
     printf("heap is empty\n");
     exit(1);
   }
-  int out = heap[1];
-  heap[1] = heap[heap[0]];
-  heap[0]--;
-  //printf("out: %d length: %d top: %d\n", out, heap[0], heap[1]);
+ 
+  flip(heap[1],heap[heap[0]->value]);
+  data *out = heap[heap[0]->value];
+  heap[0]->value--;
   int i = 1;
-  while(i<heap[0]){
-    //printf ("i : %d  heap: %d next: %d \n", i, heap[i], heap[i+1]);
-    int compare =  heap[2*i];
+  while(2*i<heap[0]->value+1){ 
+    int compare =  heap[2*i]->value; 
     int flag = 0;
-    if(2*i+1<heap[0]){
-      printf("ok\n");
-      if(heap[2*i+1]<compare){
-	//printf("comparing...\n");
+    if(2*i+1<=heap[0]->value){
+      if(heap[2*i+1]->value<compare){
 	flag = 1;
-	compare = heap[2*i+1];
+	compare = heap[2*i+1]->value;
       }
     }
-    if(heap[i]<=compare){
-      //printf("breaking\n");
+    if(heap[i]->value<=compare){
       break;
     } else {
-      int temp = heap[i];
-      heap[i] = heap[2*i+flag];
-      heap[2*i+flag] = temp;
+      flip(heap[i],heap[2*i+flag]);
       i = 2*i + flag;
     }
   }
   return out;
 } 
 
-int check(int *heap){
-  /*checks whete=her the heap property is being maintained
-    returns 1 if ok, hopefully 0 otrherwise */
-  if(heap[0] == 0){
-    printf("minor error, nothing in the heap\n");
-      return 0;
-  }  
-if(heap[0] == 1){
-  printf("length is one? I guess it's true\n");
-    return 1;
-  }
- int i = 2;
- int flag = 1;
- for (i = 2; i< heap[0]+1;i++){
-   if(heap[i]>=heap[i/2]){
-     flag++;
-   }
- }
- //printf("length: %d flag : %d\n", heap[0], flag);
- if(flag == heap[0]){
-   printf("True\n");
-   return 1;
- }
- printf("False\n");
-  return 0;
-}
 
 void heapify(int *array){
+  /* not implemented */
+
   /*array[0] should be the length of the rest of the array
   for example, array[4] = {3,2,1,3}
   heapify will sort the array in place.
@@ -116,36 +127,4 @@ void heapify(int *array){
       }
     }
   }
-}
-
-
-
-int main(void){
-  printf("on\n");
-   int *heap = create();
-  bubble(heap,7);
-  check(heap);
-  extract(heap);
-  check(heap);
-  bubble(heap,5);
-  check(heap);
-  bubble(heap, 4);
-  check(heap);
-  bubble(heap, 6);
-  check(heap);
-  bubble(heap,3);
-  bubble(heap,1);
-  check(heap);
-  extract(heap);
-
-  check(heap);
-  extract(heap);
-  check(heap);
-
-  int array[7] = {6,8,2,4,3,1,5};
-  heapify(array);
-  check(array);
-
-
-  return 0;
 }
