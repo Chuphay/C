@@ -9,4 +9,7 @@ graph_easy: queue.o
 
 A_star: heap.o
 
+hash2: stack.o
+
+
 
