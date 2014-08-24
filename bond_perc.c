@@ -3,7 +3,6 @@
 #include <time.h>
 
 void graph(data ** zee){
-
   int i;
   for(i=0;i<25;i++){
     if(i%5 == 0){
