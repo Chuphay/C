@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "myData.h"
-//#include "heap.h"
+#include "heap.h"
 
 #define MAX 30
 

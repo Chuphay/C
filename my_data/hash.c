@@ -7,6 +7,7 @@
 
 int table_count[BINS] = {};
 
+
 unsigned int horner(char *s){
   unsigned int hash = 0;
   int i = 0;

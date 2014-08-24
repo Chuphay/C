@@ -7,7 +7,7 @@ all: graph_easy
 
 graph_easy: queue.o
 
-A_star: heap.o myData.o
+a_star: heap.o myData.o
 
 hash: stack.o myData.o
 

@@ -3,7 +3,6 @@
 #include "myData.h"
 #include "heap.h"
 
-
 #define NUM 19
 
 data *create_data(char *name1, char *name2, double length){
